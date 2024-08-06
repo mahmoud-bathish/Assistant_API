@@ -1,0 +1,119 @@
+# Python
+*.py[cod]
+*.pyc
+__pycache__/
+
+# Environment variables
+.env
+
+# Virtual environment
+venv/
+env/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.swnx
+*.swox
+
+# Logs
+*.log
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyo
+*.pyd
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test logs
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+pytest_cache/
+nose2-*.xml
+test-*.xml
+cache/
+__pycache__/
+htmlcov/
+nosetests.xml
+
+# MyPy
+.mypy_cache/
+
+# Pyre type checker
+.pyre/
+
+# Bandit
+.bandit/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# dotenv
+.env.local
+.env.production
+.env.*.local
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Coverage reports
+coverage.xml
+*.cover
+
+# Sphinx documentation
+docs/_build/
+target/
+
+# Flask specific
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# Sphinx
+docs/_build/
+
+# PyBuilder
+target/
+
+# pyright
+typings/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
