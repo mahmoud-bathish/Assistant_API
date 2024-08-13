@@ -1,3 +1,4 @@
+import json
 import os
 from time import sleep
 from packaging import version
@@ -6,6 +7,8 @@ from pydantic import BaseModel
 import openai
 from openai import OpenAI
 from dotenv import load_dotenv
+
+from Functions.GermanKitchenWarFunctions import get_news
 
 # Load environment variables from .env file
 load_dotenv()
@@ -67,11 +70,23 @@ async def chat(request: ChatRequest):
     # Run the Assistant
     run = client.beta.threads.runs.create(thread_id=thread_id, assistant_id=assistant_id)
 
+
     # Check if the Run requires action (function call)
     while True:
-        run_status = client.beta.threads.runs.retrieve(thread_id=thread_id, run_id=run.id)
-        print(f"Run status: {run_status.status}")
-        if run_status.status == 'completed':
+        run_status = client.beta.threads.runs.retrieve(
+            thread_id= thread_id,
+            run_id= run.id
+        )
+        print(f"Run Status: {run_status.model_dump_json(indent=4)}")
+        if run_status.status == "completed":
+            break
+        elif run_status.status == "requires_action":
+            print("FUNCTION CALLING NOW...")
+            call_required_functions(
+                required_actions=run_status.required_actions.submit_tool_outputs.model_dump(),
+                run_id= run.id,
+                thread_id= thread_id
+            )
             break
         sleep(0.5)  # Wait for a second before checking again
 
@@ -81,6 +96,24 @@ async def chat(request: ChatRequest):
 
     print(f"Assistant response: {response}")  # Debugging line
     return {"response": response}
+
+def call_required_functions(required_actions, run_id, thread_id):
+    tools_outputs = []
+    for action in required_actions["tool_calls"]:
+        func_name = action["function"]["name"]
+        arguments = json.loads(action["function"]["arguments"])
+        if func_name == "get_news":
+            output = get_news(topic=arguments["topic"])
+            print(f"Output: {output}")
+            tools_outputs.append({"tool_call_id": action["id"], "output": output})
+        else:
+            raise ValueError(f"Unknown function: {func_name}")
+    print(f"Submitting outputs back to the Assistant...")
+    client.beta.threads.runs.submit_tool_outputs(
+        thread_id= thread_id,
+        run_id= run_id,
+        tool_outputs= tools_outputs
+    )    
 
 # Run server
 if __name__ == '__main__':

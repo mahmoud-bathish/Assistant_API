@@ -3,3 +3,4 @@ openai
 uvicorn
 python-dotenv
 packaging
+requests
